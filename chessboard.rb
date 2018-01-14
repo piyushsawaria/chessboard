@@ -1,5 +1,6 @@
 class ChessBoard
   def all_possible_moves(type,position)
+    return puts 'Not a valid entry' unless is_valide_input?(type,position)
     arr_dimention = convert_position_to_coordinates(position)
     possible_moves = []
     x_pos = arr_dimention[0]
@@ -58,7 +59,7 @@ class ChessBoard
         [2, 1],
         [1, 2]
       ]
-    elsif type.downcase == 'queen'
+    else
       [
         [1, 1],
         [1, -1],
@@ -71,6 +72,16 @@ class ChessBoard
       ]
     end
   end
+
+  def is_valide_input?(type,position)
+    %w(knight queen rook).include?(type.downcase) &&
+    ('a'..'h').map do |x|
+      (1..8).map do |y|
+        x+y.to_s
+      end
+    end.flatten.include?(position)
+  end
+
 end
 
-# ChessBoard.new.all_possible_moves('knight','d2')
+ChessBoard.new.all_possible_moves('knight','d2')
