@@ -1,7 +1,12 @@
 class ChessBoard
-  def all_possible_moves(type,position)
+  def show_possible_moves(type,position)
     return puts 'Not a valid entry' unless is_valide_input?(type,position)
     arr_dimention = convert_position_to_coordinates(position)
+    possible_moves = all_possible_moves(type,arr_dimention)
+    p convert_coordinates_to_position(possible_moves)
+  end
+
+  def all_possible_moves(type,arr_dimention)
     possible_moves = []
     x_pos = arr_dimention[0]
     y_pos = arr_dimention[1]
@@ -22,7 +27,7 @@ class ChessBoard
         end
       end
     end
-    p convert_coordinates_to_position(possible_moves)
+    possible_moves
   end
 
   def convert_position_to_coordinates(position)
@@ -35,9 +40,13 @@ class ChessBoard
 
   def convert_coordinates_to_position(coordinates_arr)
     x_row = {0=>'a', 1=>'b', 2=>'c', 3=>'d', 4=>'e', 5=>'f', 6=>'g', 7=> 'h'}
-    coordinates_arr.map do |ar|
-      [x_row[ar[0]],ar[1]+1].join('')
-    end.join(',')
+    if coordinates_arr.all? { |e| e.class==Array }
+      coordinates_arr.map do |ar|
+        [x_row[ar[0]],ar[1]+1].join('')
+      end.join(',')
+    else
+      [x_row[coordinates_arr[0]],coordinates_arr[1]+1].join('')
+    end
   end
 
   def moveset(type)
@@ -81,7 +90,61 @@ class ChessBoard
       end
     end.flatten.include?(position)
   end
-
 end
 
-ChessBoard.new.all_possible_moves('knight','d2')
+class Node
+  attr_accessor :type, :position, :possibilities, :previous
+  def initialize(type,position, previous)
+    @type = type
+    @position = position
+    @possibilities = ChessBoard.new.all_possible_moves(type, position)
+    @previous = previous
+  end
+end
+
+class ShortestPath
+  def piece_movement(type,pos1,target_pieces)
+    pos1 = ChessBoard.new.convert_position_to_coordinates(pos1)
+    pos2, pos2_text = find_longest_distance_piece(pos1,target_pieces)
+    nodes = generate_nodes(type,pos1,pos2)
+    arr_coordiantes = output(nodes)<<pos2
+    puts "Number of steps required to reach #{pos2_text} is #{arr_coordiantes.count - 1}"
+    p ChessBoard.new.convert_coordinates_to_position(arr_coordiantes)
+  end
+
+  def find_longest_distance_piece(pos1,target_pieces)
+    target_pieces_arr = target_pieces.split(',').map {|coordinate| ChessBoard.new.convert_position_to_coordinates(coordinate) }
+    hash_piece = Hash.new
+    target_pieces_arr.each do |piece|
+      hash_piece[piece] = Math.sqrt((piece[0] - pos1[0])**2 + (piece[1] - pos1[1])**2)
+    end
+    pos2_coordinate = hash_piece.key(hash_piece.values.sort.last)
+    pos2_text = ChessBoard.new.convert_coordinates_to_position(pos2_coordinate)
+    return pos2_coordinate, pos2_text
+  end
+  
+  def generate_nodes(type,pos1,pos2) 
+    current = Node.new(type,pos1,nil)
+    queue = []
+    until current.possibilities.include?(pos2)
+      for possible_move in current.possibilities
+        queue<<Node.new(type,possible_move,current)
+      end
+      current = queue[0]
+      queue = queue[1..-1]
+    end
+    current
+  end
+  
+  def output(node)
+    history = []
+    until node == nil
+      history.unshift(node.position)
+      node = node.previous
+    end
+    history
+  end
+end
+
+# ChessBoard.new.show_possible_moves('knight','d2')
+# ShortestPath.new.piece_movement('queen','a1', 'b4,d2,a5,h4,h2,h8')
