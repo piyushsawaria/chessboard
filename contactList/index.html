@@ -1,0 +1,74 @@
+<!doctype html>
+<html ng-app="contact">
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+    <script src="app.js"></script>
+    <title>Contact List</title>
+  </head>
+
+  <body>
+    <div ng-controller="Contact">
+      <div class="container">
+        <h2>External Contacts</h2>
+        <button type="button" class="btn btn-default btn-sm" data-toggle="collapse" data-target="#collapse" style="float:right">
+          <span class="glyphicon glyphicon-minus"></span>
+        </button></span>
+        <p>Select the client contacts asociated with this offer</p><br>
+        <div id='collapse' class='collapse in'>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Name</th>
+                <th>Title</th>
+                <th>Phone</th>
+                <th>Ext.</th>
+                <th>Fax</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat='contact in contactList.contacts'>
+                <td>{{contact.type}}</td>
+                <td>{{contact.name}}</td>
+                <td>{{contact.title}}</td>
+                <td>{{contact.phone}}</td>
+                <td>{{contact.ext}}</td>
+                <td>{{contact.fax}}</td>
+                <td>{{contact.email}}</td>
+              </tr>  
+            </tbody>
+          </table>
+        </div>
+        <form ng-submit='addcontact()'>
+          <h3>Add a new contact</h3>
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Type" ng-model='type'></input>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Name" ng-model='name'></input>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Title" ng-model='title'></input>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Phone" ng-model='phone'></input>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Ext" ng-model='ext'></input>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Fax" ng-model='fax'></input>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Email" ng-model='email'></input>
+          </div>
+          <button type="submit" class="btn btn-primary">Add Contact</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
