@@ -4,7 +4,15 @@
 table tr:nth-child(odd) {
   background-color: #f1f1f1;
 }
+table td, table th{
+  text-align: center;
+  vertical-align: middle;
+}
+table th, div h2{
+  color: #337ab7;
+}
 </style>
+
   <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -18,14 +26,18 @@ table tr:nth-child(odd) {
     <div ng-controller="Contact">
       <div class="container">
         <h2>External Contacts</h2>
-        <span style="float:right">Collapse <button type="button" class="btn btn-default btn-sm" data-toggle="collapse" data-target="#collapse" >
-          <span class="glyphicon glyphicon-minus"></span>
-        </button></span>
+        <span style="float:right">
+          <button id='collapse_button' type="button" class="btn btn-default btn-sm" data-toggle="collapse" data-target="#collapse">
+            <span id='collapse_icon' class="glyphicon glyphicon-minus"></span>
+          </button>
+          <span id='collapse_text'>Collapse</span>
+        </span>
         <p>Select the client contacts asociated with this offer</p><br>
         <div id='collapse' class='collapse in'>
-          <table class="table table-bordered">
+          <table class="table table-bordered" align='center'>
             <thead>
-              <tr style="background-color: #ffffff">
+              <tr style="background-color: #ccc">
+                <th><input type="checkbox" ng-click="allCheck()" ng-model="isAllChecked"/></th>
                 <th>Type</th>
                 <th>Name</th>
                 <th>Title</th>
@@ -38,6 +50,7 @@ table tr:nth-child(odd) {
             </thead>
             <tbody>
               <tr ng-repeat='contact in contactList.contacts'>
+                <td><input type="checkbox" ng-model="contact.isChecked"/></td>
                 <td>{{contact.type}}</td>
                 <td>{{contact.name}}</td>
                 <td>{{contact.title}}</td>
@@ -45,12 +58,15 @@ table tr:nth-child(odd) {
                 <td>{{contact.ext}}</td>
                 <td>{{contact.fax}}</td>
                 <td>{{contact.email}}</td>
-                <td> <button class='btn btn-danger' ng-click="deleteContact($index)">Delete</button> </td>
+                <td><span class='glyphicon glyphicon-remove' ng-click="deleteContact($index)"></span></td>
               </tr>  
             </tbody>
           </table>
         </div>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Add Contact</button>
+        <div style="text-align: center">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Add Contact</button>
+          <button type="button" class="btn btn-danger" ng-click="deleteSelectedContact()">Remove Contact</button>
+        </div>
         <div class="modal fade" id="myModal" role="dialog">
           <div class="modal-dialog">
             <div class="modal-content">
@@ -64,13 +80,13 @@ table tr:nth-child(odd) {
                     <input type="text" class="form-control" placeholder="Type" ng-model='type'></input>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Name" ng-model='name'></input>
+                    <input type="text" class="form-control" placeholder="Name" ng-model='name' required></input>
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control" placeholder="Title" ng-model='title'></input>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Phone" ng-model='phone'></input>
+                    <input type="number" min="9999" max="9999999999" class="form-control" placeholder="Phone" ng-model='phone' required></input>
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control" placeholder="Ext" ng-model='ext'></input>
@@ -79,7 +95,7 @@ table tr:nth-child(odd) {
                     <input type="text" class="form-control" placeholder="Fax" ng-model='fax'></input>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Email" ng-model='email'></input>
+                    <input type="text" class="form-control" placeholder="Email" ng-model='email' required></input>
                   </div>
                   <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Submit</button>
@@ -93,3 +109,10 @@ table tr:nth-child(odd) {
     </div>
   </body>
 </html>
+
+<script type="text/javascript">
+  $('#collapse_button').click(function(){
+    $('#collapse_text').text(($('#collapse_text').text() == 'Collapse') ? 'Expand' : 'Collapse');
+    $(this).children('#collapse_icon').toggleClass('glyphicon-minus glyphicon-plus');
+  });
+</script>
