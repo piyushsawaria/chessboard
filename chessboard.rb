@@ -1,6 +1,6 @@
 class ChessBoard
   def show_possible_moves(type,position)
-    return puts 'Not a valid entry' unless is_valide_input?(type,position)
+    return puts 'Not a valid entry' unless is_valid_input?(type,position)
     arr_dimention = convert_position_to_coordinates(position)
     possible_moves = all_possible_moves(type,arr_dimention)
     p convert_coordinates_to_position(possible_moves)
@@ -82,7 +82,7 @@ class ChessBoard
     end
   end
 
-  def is_valide_input?(type,position)
+  def is_valid_input?(type,position)
     %w(knight queen rook).include?(type.downcase) &&
     ('a'..'h').map do |x|
       (1..8).map do |y|
@@ -102,24 +102,25 @@ class Node
   end
 end
 
-class ShortestPath
+class ShortestPath < ChessBoard
   def piece_movement(type,pos1,target_pieces)
-    pos1 = ChessBoard.new.convert_position_to_coordinates(pos1)
+    return puts 'Not a valid entry' unless is_valid?(type,pos1,target_pieces)
+    pos1 = convert_position_to_coordinates(pos1)
     pos2, pos2_text = find_longest_distance_piece(pos1,target_pieces)
     nodes = generate_nodes(type,pos1,pos2)
     arr_coordiantes = output(nodes)<<pos2
     puts "Number of steps required to reach #{pos2_text} is #{arr_coordiantes.count - 1}"
-    p ChessBoard.new.convert_coordinates_to_position(arr_coordiantes)
+    p convert_coordinates_to_position(arr_coordiantes)
   end
 
   def find_longest_distance_piece(pos1,target_pieces)
-    target_pieces_arr = target_pieces.split(',').map {|coordinate| ChessBoard.new.convert_position_to_coordinates(coordinate) }
+    target_pieces_arr = target_pieces.split(',').map {|coordinate| convert_position_to_coordinates(coordinate) }
     hash_piece = Hash.new
     target_pieces_arr.each do |piece|
       hash_piece[piece] = Math.sqrt((piece[0] - pos1[0])**2 + (piece[1] - pos1[1])**2)
     end
     pos2_coordinate = hash_piece.key(hash_piece.values.sort.last)
-    pos2_text = ChessBoard.new.convert_coordinates_to_position(pos2_coordinate)
+    pos2_text = convert_coordinates_to_position(pos2_coordinate)
     return pos2_coordinate, pos2_text
   end
   
@@ -144,7 +145,16 @@ class ShortestPath
     end
     history
   end
+
+  def is_valid?(type, pos1, pos2_string)
+    pos2_arr = pos2_string.split(',')
+    if pos2_arr.count.between?(1,8)
+      return pos2_arr.map{|pos| is_valid_input?(type,pos)}.all? && is_valid_input?(type,pos1)
+    else
+      return false
+    end
+  end
 end
 
-# ChessBoard.new.show_possible_moves('knight','d2')
+# ChessBoard.new.show_possible_moves('rook','a1')
 # ShortestPath.new.piece_movement('queen','a1', 'b4,d2,a5,h4,h2,h8')

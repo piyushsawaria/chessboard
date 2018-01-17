@@ -37,13 +37,13 @@ describe 'chessboard' do
   	end
   end
 
-  context '#is_valide_input?' do
+  context '#is_valid_input?' do
   	it 'return true' do
-  		val = ChessBoard.new.is_valide_input?('queen','d4')
+  		val = ChessBoard.new.is_valid_input?('queen','d4')
   		expect(val).to eq true
   	end
   	it 'return false' do
-  		val = ChessBoard.new.is_valide_input?('queen','d9')
+  		val = ChessBoard.new.is_valid_input?('queen','d9')
   		expect(val).to eq false
   	end
   end
@@ -64,4 +64,15 @@ describe 'ShortestPath' do
 			expect(route).to eq 'a1,c2,a3,c4,e5,g6,h8'
 		end
 	end
+
+	context '#is_valid?' do
+  	it 'return true' do
+  		val = ShortestPath.new.is_valid?('queen','a1', 'b4,d2,a5,h4,h2,h8')
+  		expect(val).to eq true
+  	end
+  	it 'return false' do
+  		val = ShortestPath.new.is_valid?('queen','a11', 'b4,d2,a5,h4,h2,h8')
+  		expect(val).to eq false
+  	end
+  end
 end
