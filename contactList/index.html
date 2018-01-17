@@ -33,6 +33,9 @@ table th, div h2{
           <span id='collapse_text'>Collapse</span>
         </span>
         <p>Select the client contacts asociated with this offer</p><br>
+        <div class='form-group'>
+          <input type="text" class="form-control" placeholder="Search contact by name or email" ng-model="searchContact" style="width: 29%" />
+        </div>
         <div id='collapse' class='collapse in'>
           <table class="table table-bordered">
             <thead>
@@ -49,7 +52,7 @@ table th, div h2{
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat='contact in contactList.contacts'>
+              <tr ng-repeat='contact in contactList.contacts | filter:search'>
                 <td><input type="checkbox" ng-model="contact.isChecked"/></td>
                 <td>{{contact.type}}</td>
                 <td>{{contact.name}}</td>
@@ -77,25 +80,25 @@ table th, div h2{
               <div class="modal-body">
                 <form ng-submit='addContact()'>
                   <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Type" ng-model='type'></input>
+                    <input type="text" class="form-control" placeholder="Type" ng-model='type'/>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Name" ng-model='name' required></input>
+                    <input type="text" class="form-control" placeholder="Name" ng-model='name' required/>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Title" ng-model='title'></input>
+                    <input type="text" class="form-control" placeholder="Title" ng-model='title'/>
                   </div>
                   <div class="form-group">
-                    <input type="number" min="9999" max="9999999999" class="form-control" placeholder="Phone" ng-model='phone' required></input>
+                    <input type="number" min="9999" max="9999999999" class="form-control" placeholder="Phone" ng-model='phone' required/>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Ext" ng-model='ext'></input>
+                    <input type="text" class="form-control" placeholder="Ext" ng-model='ext'/>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Fax" ng-model='fax'></input>
+                    <input type="text" class="form-control" placeholder="Fax" ng-model='fax'/>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Email" ng-model='email' required></input>
+                    <input type="text" class="form-control" placeholder="Email" ng-model='email' required/>
                   </div>
                   <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Submit</button>
